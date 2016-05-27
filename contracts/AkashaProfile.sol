@@ -1,27 +1,53 @@
-contract AkashaProfile {
-address public _owner;
- bytes23[2] plm;
- function AkashaProfile(address owner){
-    _owner = owner;
- }
+import 'AkashaRegistry.sol';
+import "../solidity-stringutils/strings.sol";
 
- function getIpfs(bytes23[2] _plm) constant returns(string){
-         bytes memory bytesString = new bytes(2 * 23);
-         uint urlLength;
-         for (uint i=0; i<2; i++) {
-             for (uint j=0; j<23; j++) {
-                 byte char = byte(bytes32(uint(_plm[i]) * 2 ** (8 * j)));
-                 if (char != 0) {
-                     bytesString[urlLength] = char;
-                     urlLength += 1;
-                 }
-             }
-         }
-         bytes memory bytesStringTrimmed = new bytes(urlLength);
-         for (i=0; i<urlLength; i++) {
-             bytesStringTrimmed[i] = bytesString[i];
-         }
-         return string(bytesStringTrimmed);
-     }
+contract AkashaProfile {
+    using strings for *;
+    address public _owner;
+    address public _ethAddress;
+    string _fullName;
+
+    bytes32[2] _hash;
+    AkashaRegistry registrar;
+
+    event UpdateInfo();
+
+    modifier onlyOwner{
+        if(msg.sender==_owner){ _ }
+    }
+
+    function AkashaProfile(address owner){
+        _owner = owner;
+    }
+
+    function getCollector() constant returns(address){
+        if(_ethAddress!=address(0x0)){
+            return _ethAddress;
+        }
+        return _owner;
+    }
+
+    function setEthAddress(address newAddr) onlyOwner{
+        _ethAddress = newAddr;
+    }
+
+    function setFullName(string fullName) onlyOwner{
+        _fullName = fullName;
+        UpdateInfo();
+    }
+
+    function updateHash(bytes32[2] chunks) onlyOwner{
+        _hash = chunks;
+        UpdateInfo();
+    }
+
+    function removeProfile() onlyOwner{
+        var unlist = registrar.unregister();
+        if(unlist){
+           suicide(msg.sender);
+        }
+    }
+
+    function(){ throw;}
 
 }
