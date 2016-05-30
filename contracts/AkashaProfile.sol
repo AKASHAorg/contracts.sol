@@ -3,8 +3,8 @@ import "../solidity-stringutils/strings.sol";
 
 contract AkashaProfile {
     using strings for *;
-    address public _owner;
-    address public _ethAddress;
+    address _owner;
+    address _ethAddress;
     string _fullName;
 
     bytes32[2] _hash;
@@ -13,7 +13,8 @@ contract AkashaProfile {
     event UpdateInfo();
 
     modifier onlyOwner{
-        if(msg.sender==_owner){ _ }
+        if(msg.sender!=_owner){ throw; }
+        _
     }
 
     function AkashaProfile(address owner){
@@ -44,7 +45,7 @@ contract AkashaProfile {
     function removeProfile() onlyOwner{
         var unlist = registrar.unregister();
         if(unlist){
-           suicide(msg.sender);
+           suicide(_owner);
         }
     }
 
