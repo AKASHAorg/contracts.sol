@@ -1,11 +1,11 @@
 contract AkashaTags {
-    address _owner;
+    address _creator;
     mapping(bytes32 => uint) _tag;
     bytes32[] _knownTags;
     uint _length = 1;
 
     function AkashaTags(){
-        _owner = msg.sender;
+        _creator = msg.sender;
     }
 
     function exists(bytes32 tag) constant returns(bool){
@@ -25,7 +25,7 @@ contract AkashaTags {
     }
 
     function destroy(){
-        if(msg.sender == _owner){ suicide(_owner);}
+        if(msg.sender == _creator){ suicide(_creator);}
     }
     function(){throw;}
 }

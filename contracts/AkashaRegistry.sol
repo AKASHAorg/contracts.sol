@@ -1,7 +1,7 @@
 import 'AkashaProfile.sol';
 
 contract AkashaRegistry {
-    address _creator;
+    address public _creator;
     // id => contract addr
     mapping(bytes32=>address) _profile;
     // sha3(msg.sender) => id
@@ -57,8 +57,5 @@ contract AkashaRegistry {
         }
     }
 
-     function destroy(){
-            if(msg.sender == _owner){ suicide(_owner);}
-        }
-        function(){throw;}
+     function(){throw;}
 }
