@@ -4,6 +4,4 @@ layout:
   sol_sources: contracts
   build_dir: build
 dependencies: {}
-ignore:
- - ../solidity-stringutils/strings_test.sol
 name: contracts

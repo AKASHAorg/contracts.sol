@@ -37,7 +37,11 @@ contract AkashaProfile {
         UpdateInfo();
     }
 
-    function updateHash(bytes32[2] chunks) onlyOwner{
+    function getIpfs() constant returns(string){
+        return _hash[0].toSliceB32().concat(_hash[1].toSliceB32());
+    }
+
+    function setHash(bytes32[2] chunks) onlyOwner{
         _hash = chunks;
         UpdateInfo();
     }
@@ -48,6 +52,7 @@ contract AkashaProfile {
            suicide(_owner);
         }
     }
+
 
     function(){ throw;}
 

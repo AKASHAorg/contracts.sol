@@ -16,7 +16,7 @@ contract AkashaRegistryTest is Test {
     function testRegister() {
         Register("John_Doe", address(0x0));
 
-        assertEq(reg.hasProfile("John_Doe"), false);
+        assertFalse(reg.hasProfile("John_Doe"));
         AkashaRegistry(proxy_tester).register("John_Doe");
         assertTrue(reg.hasProfile("John_Doe"));
 

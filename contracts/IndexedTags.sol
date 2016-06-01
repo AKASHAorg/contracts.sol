@@ -1,11 +1,12 @@
 import "AkashaTags.sol";
+import "AkashaRegistry.sol";
 
 contract IndexedTags {
     address _creator;
     AkashaTags _tags;
-
+    AkashaRegistry _registry;
     struct TagMeta {
-     address[] entries;
+     address[] entries; // use ipfs hash head
      uint totalSubs;
     }
     mapping(uint => TagMeta) public cursor;
@@ -27,15 +28,18 @@ contract IndexedTags {
 
     function subscribe(bytes32 tag){
         var tagId = _tags.getTagId(tag);
-        if(!_tags.exists(tag) || isSubscribed(msg.sender, tagId)){ throw;}
-        subscriptions[msg.sender].push(tagId);
+        var profile = _registry.getByAddr(msg.sender);
+        if(profile==address(0x0) || !_tags.exists(tag) || isSubscribed(profile, tagId)){ throw;}
+        subscriptions[profile].push(tagId);
         cursor[tagId].totalSubs++;
     }
 
     function unsubscribe(bytes32 tag){
         var tagId = _tags.getTagId(tag);
-        if(!_tags.exists(tag) || !isSubscribed(msg.sender, tagId)){ throw;}
-        delete subscriptions[msg.sender][getSubPosition(msg.sender, tagId)];
+        var profile = _registry.getByAddr(msg.sender);
+        if(!_tags.exists(tag) || !isSubscribed(profile, tagId)){ throw;}
+        delete subscriptions[profile][getSubPosition(profile, tagId)];
+        cursor[tagId].totalSubs--;
     }
 
     function isSubscribed(address subscriber, uint tagId) constant returns(bool){
