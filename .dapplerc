@@ -1,0 +1,9 @@
+environments:
+  live:
+    ethereum:
+      host: localhost
+      port: '8545'
+      account: ''
+    ipfs:
+      host: localhost
+      port: '5001'

@@ -53,7 +53,6 @@ contract AkashaProfile {
         }
     }
 
-
     function(){ throw;}
 
 }

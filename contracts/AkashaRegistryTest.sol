@@ -13,7 +13,7 @@ contract AkashaRegistryTest is Test {
         assertEq( address(this), reg._creator() );
     }
     event Register(bytes32 indexed key,address contr);
-    function testRegister() {
+    function testRegister() logs_gas {
         Register("John_Doe", address(0x0));
 
         assertFalse(reg.hasProfile("John_Doe"));
