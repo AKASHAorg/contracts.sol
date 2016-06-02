@@ -1,8 +1,6 @@
 import 'AkashaRegistry.sol';
-import "../solidity-stringutils/strings.sol";
 
 contract AkashaProfile {
-    using strings for *;
     address _owner;
     address _ethAddress;
     string _fullName;
@@ -19,6 +17,7 @@ contract AkashaProfile {
 
     function AkashaProfile(address owner){
         _owner = owner;
+        registrar = AkashaRegistry(0xf225a095cdf7854d2e1cdc8b9de65a569b8f7cdb);
     }
 
     function getCollector() constant returns(address){
@@ -37,8 +36,8 @@ contract AkashaProfile {
         UpdateInfo();
     }
 
-    function getIpfs() constant returns(string){
-        return _hash[0].toSliceB32().concat(_hash[1].toSliceB32());
+    function getIpfs() constant returns(bytes32 chunk1, bytes32 chunk2){
+        return (_hash[0], _hash[1]);
     }
 
     function setHash(bytes32[2] chunks) onlyOwner{

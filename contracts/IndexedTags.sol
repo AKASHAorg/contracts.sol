@@ -16,6 +16,8 @@ contract IndexedTags {
 
     function IndexedTags(){
        _creator = msg.sender;
+       _tags = AkashaTags(0x0b822e285ab00a918b35a3080cffd9c6044b41aa);
+       _registry = AkashaRegistry(0xdd057efd13ec337e62f3889ede790d3f6ac17248);
     }
 
     function indexEntry(bytes32[] tag){

@@ -1,21 +1,21 @@
-library AkashaLib {
+import "../solidity-stringutils/strings.sol";
 
- function getIpfs(bytes23[2] _chunks) returns(string){
-         bytes memory bytesString = new bytes(2 * 23);
-         uint urlLength;
-         for (uint i=0; i<2; i++) {
-             for (uint j=0; j<23; j++) {
-                 byte char = byte(bytes32(uint(_chunks[i]) * 2 ** (8 * j)));
-                 if (char != 0) {
-                     bytesString[urlLength] = char;
-                     urlLength += 1;
-                 }
-             }
-         }
-         bytes memory bytesStringTrimmed = new bytes(urlLength);
-         for (i=0; i<urlLength; i++) {
-             bytesStringTrimmed[i] = bytesString[i];
-         }
-         return string(bytesStringTrimmed);
-     }
+contract AkashaLib {
+    using strings for *;
+
+    address _creator;
+    function AkashaLib(){
+     _creator = msg.sender;
+    }
+
+    function getIpfs(bytes32 first, bytes32 second) constant returns(string){
+         return first.toSliceB32().concat(second.toSliceB32());
+    }
+
+    function destroy(){
+        if(msg.sender != _creator){ throw;}
+        suicide(_creator);
+    }
+
+    function(){ throw;}
 }

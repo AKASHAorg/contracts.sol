@@ -1,5 +1,3 @@
-
-
 contract AkashaEntry {
     address _owner;
     bytes32[2] hash;
