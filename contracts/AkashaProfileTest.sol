@@ -1,12 +1,16 @@
 import 'dapple/test.sol';
 import 'AkashaProfile.sol';
+import 'AkashaRegistry.sol';
 import "../solidity-stringutils/strings.sol";
 
 contract AkashaProfileTest is Test {
     using strings for *;
     AkashaProfile myProfile;
+    AkashaRegistry registrar;
     function setUp() {
-        myProfile = new AkashaProfile(address(this));
+        registrar = new AkashaRegistry();
+        registrar.register('costel1');
+        myProfile = AkashaProfile(registrar.getByAddr(address(this)));
     }
 
     function testHash() logs_gas {

@@ -14,7 +14,7 @@ environments:
         address: '0x4da189c2891f46cc266c98f341c45ac027223951'
       registry:
         class: AkashaRegistry
-        address: '0xf416aee89c245fd7fe4e7141a19601055b7cc33c'
+        address: '0x4e24a421a1477107d49027ec08771635869dee24'
       akashaTags:
         class: AkashaTags
         address: '0x6b495143665763101d13f9ec71635543748795dc'

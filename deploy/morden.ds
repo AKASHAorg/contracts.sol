@@ -1,8 +1,2 @@
-var akashaLib = new AkashaLib()
-export akashaLib
 var registry = new AkashaRegistry()
 export registry
-var akashaTags = new AkashaTags()
-export akashaTags
-var indexedTags = new IndexedTags()
-export indexedTags

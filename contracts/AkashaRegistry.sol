@@ -16,7 +16,7 @@ contract AkashaRegistry {
     // register new Profile
     function register(bytes32 name) {
         if(hasProfile(name)){ throw;}
-        _profile[name] = new AkashaProfile(msg.sender);
+        _profile[name] = new AkashaProfile(msg.sender, address(this));
         _link[sha3(msg.sender)] = name;
         Register(name, _profile[name]);
     }
@@ -51,10 +51,11 @@ contract AkashaRegistry {
         return getByAddr(msg.sender);
     }
 
-    function withdraw(uint val){
-        if(msg.sender==_creator){
-            _creator.send(val);
+    function destroy(){
+        if(msg.sender != _creator){
+            throw;
         }
+        suicide(_creator);
     }
 
      function(){throw;}
