@@ -4,5 +4,5 @@
 ```javascript
 const AkashaContract = require('./build/js_module').class;
 const web3 = web3Instance // get a web3 instance;
-const registrar = new AkashaContract.objects.registry;
+const registrar = new AkashaContract(web3).objects.registry;
 ```
