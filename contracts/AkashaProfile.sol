@@ -16,8 +16,9 @@ contract AkashaProfile {
     }
 
     // Set contract owner and Registrar contract from address
-    function AkashaProfile(address owner, address registrar){
+    function AkashaProfile(address owner, address registrar, bytes32[2] chunks){
         _owner = owner;
+        _hash = chunks;
         registrar = AkashaRegistry(registrar);
     }
 
@@ -32,11 +33,6 @@ contract AkashaProfile {
     // Set address for receiving tipping
     function setEthAddress(address newAddr) onlyOwner{
         _ethAddress = newAddr;
-    }
-
-    function setFullName(string fullName) onlyOwner{
-        _fullName = fullName;
-        UpdateInfo();
     }
 
     // Get ipfs hash for profile data

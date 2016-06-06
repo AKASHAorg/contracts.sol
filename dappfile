@@ -9,15 +9,6 @@ name: contracts
 environments:
   default:
     objects:
-      akashaLib:
-        class: AkashaLib
-        address: '0x4da189c2891f46cc266c98f341c45ac027223951'
       registry:
         class: AkashaRegistry
-        address: '0x4e24a421a1477107d49027ec08771635869dee24'
-      akashaTags:
-        class: AkashaTags
-        address: '0x6b495143665763101d13f9ec71635543748795dc'
-      indexedTags:
-        class: IndexedTags
-        address: '0x3f4908343830f1cf6c07fc399ee0a4ae132ac5df'
+        address: '0x746c7649d41f604ebfbedd32e20ce01c0d2d5eae'

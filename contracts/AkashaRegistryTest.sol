@@ -17,7 +17,8 @@ contract AkashaRegistryTest is Test {
         Register("John_Doe", address(0x0));
 
         assertFalse(reg.hasProfile("John_Doe"));
-        AkashaRegistry(proxy_tester).register("John_Doe");
+        AkashaRegistry(proxy_tester).register("John_Doe", [bytes32("QmVtoCDn6SPn6vqUZnhZjTU"),
+        bytes32("1B1pbzLAbyTu2EukJMrRGPZ")]);
         assertTrue(reg.hasProfile("John_Doe"));
 
         // registry mapping point to the same contract address

@@ -9,7 +9,7 @@ contract AkashaProfileTest is Test {
     AkashaRegistry registrar;
     function setUp() {
         registrar = new AkashaRegistry();
-        registrar.register('costel1');
+        registrar.register('costel1', [bytes32("QmVtoCDn6SPn6vqUZnhZjTU"), bytes32("1B1pbzLAbyTu2EukJMrRGPZ")]);
         myProfile = AkashaProfile(registrar.getByAddr(address(this)));
     }
 

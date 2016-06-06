@@ -14,9 +14,9 @@ contract AkashaRegistry {
     }
 
     // register new Profile
-    function register(bytes32 name) {
+    function register(bytes32 name, bytes32[2] ipfsChunks) {
         if(hasProfile(name)){ throw;}
-        _profile[name] = new AkashaProfile(msg.sender, address(this));
+        _profile[name] = new AkashaProfile(msg.sender, address(this), ipfsChunks);
         _link[sha3(msg.sender)] = name;
         Register(name, _profile[name]);
     }
