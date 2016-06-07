@@ -15,19 +15,23 @@ dapple['contracts'] = (function builder () {
         'objects': {
           'registry': {
             'class': 'AkashaRegistry',
-            'address': '0xc71e044e03dd9d61802b8d43b8caaaf10b979d1a'
+            'address': '0x6c78449dc12611252a8a44419754fff1a56a36e7'
           },
           'helper': {
             'class': 'AkashaLib',
-            'address': '0x487f64218c4e1aab06d92cb2672e254522f99705'
+            'address': '0xdf7708f8dfd4c26da423649ce50e621ca15f668f'
           },
           'tags': {
             'class': 'AkashaTags',
-            'address': '0x97e5088bec074a91404555dd3636d7be2d2b2ddd'
+            'address': '0xccab5372ed2597e175041a63811aaaf7621ae865'
           },
           'indexedTags': {
             'class': 'IndexedTags',
-            'address': '0xb86770e8a17fb6da8a6a6ed8333faba77d53a86d'
+            'address': '0x3d1358cf4d024120ae19002822228344c61e394f'
+          },
+          'badges': {
+            'class': 'AkashaBadges',
+            'address': '0x086becd9ee4610f610276cb1a9c0e5cddc27f038'
           }
         }
       }
@@ -63,19 +67,23 @@ dapple['contracts'] = (function builder () {
       'objects': {
         'registry': {
           'class': 'AkashaRegistry',
-          'address': '0xc71e044e03dd9d61802b8d43b8caaaf10b979d1a'
+          'address': '0x6c78449dc12611252a8a44419754fff1a56a36e7'
         },
         'helper': {
           'class': 'AkashaLib',
-          'address': '0x487f64218c4e1aab06d92cb2672e254522f99705'
+          'address': '0xdf7708f8dfd4c26da423649ce50e621ca15f668f'
         },
         'tags': {
           'class': 'AkashaTags',
-          'address': '0x97e5088bec074a91404555dd3636d7be2d2b2ddd'
+          'address': '0xccab5372ed2597e175041a63811aaaf7621ae865'
         },
         'indexedTags': {
           'class': 'IndexedTags',
-          'address': '0xb86770e8a17fb6da8a6a6ed8333faba77d53a86d'
+          'address': '0x3d1358cf4d024120ae19002822228344c61e394f'
+        },
+        'badges': {
+          'class': 'AkashaBadges',
+          'address': '0x086becd9ee4610f610276cb1a9c0e5cddc27f038'
         }
       }
     };
@@ -95,6 +103,98 @@ dapple['contracts'] = (function builder () {
     }
 
     this.headers = {
+      'AkashaBadges': {
+        'interface': [
+          {
+            'constant': true,
+            'inputs': [
+              {
+                'name': '',
+                'type': 'uint256'
+              }
+            ],
+            'name': '_knownBadges',
+            'outputs': [
+              {
+                'name': '',
+                'type': 'bytes32'
+              }
+            ],
+            'type': 'function'
+          },
+          {
+            'constant': true,
+            'inputs': [
+              {
+                'name': 'id',
+                'type': 'bytes32'
+              }
+            ],
+            'name': 'getBadge',
+            'outputs': [
+              {
+                'name': 'first',
+                'type': 'bytes32'
+              },
+              {
+                'name': 'second',
+                'type': 'bytes32'
+              }
+            ],
+            'type': 'function'
+          },
+          {
+            'constant': false,
+            'inputs': [],
+            'name': 'destroy',
+            'outputs': [],
+            'type': 'function'
+          },
+          {
+            'constant': false,
+            'inputs': [
+              {
+                'name': 'id',
+                'type': 'bytes32'
+              },
+              {
+                'name': 'hash',
+                'type': 'bytes32[2]'
+              }
+            ],
+            'name': 'createBadge',
+            'outputs': [
+              {
+                'name': '',
+                'type': 'bool'
+              }
+            ],
+            'type': 'function'
+          },
+          {
+            'constant': true,
+            'inputs': [
+              {
+                'name': 'id',
+                'type': 'bytes32'
+              }
+            ],
+            'name': 'badgeExists',
+            'outputs': [
+              {
+                'name': '',
+                'type': 'bool'
+              }
+            ],
+            'type': 'function'
+          },
+          {
+            'inputs': [],
+            'type': 'constructor'
+          }
+        ],
+        'bytecode': '60606040525b33600060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908302179055505b61046a8061003f6000396000f360606040523615610069576000357c010000000000000000000000000000000000000000000000000000000090048063676c20481461007657806377002fcf146100a657806383197ef0146100e1578063ae94ebd1146100f0578063af4bd7431461014c57610069565b6100745b610002565b565b005b61008c600480803590602001909190505061017a565b604051808260001916815260200191505060405180910390f35b6100bc600480803590602001909190505061019f565b6040518083600019168152602001826000191681526020019250505060405180910390f35b6100ee6004805050610211565b005b6101346004808035906020019091908060400190600280602002604051908101604052809291908260026020028082843782019150505050509090919050506102aa565b60405180821515815260200191505060405180910390f35b610162600480803590602001909190505061041d565b60405180821515815260200191505060405180910390f35b600260005081815481101561000257906000526020600020900160005b915090505481565b600060006001600050600084600019168152602001908152602001600020600050600060028110156100025790900160005b50546001600050600085600019168152602001908152602001600020600050600160028110156100025790900160005b50549150915061020c565b915091565b600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561026d57610002565b600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16ff5b565b6000600060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561030857610002565b6103118361041d565b1561031f5760009050610417565b81600160005060008560001916815260200190815260200160002060005090600282600290908101928215610374579160200282015b82811115610373578251826000505591602001919060010190610355565b5b50905061039f9190610381565b8082111561039b5760008181506000905550600101610381565b5090565b5050600260005080548060010182818154818355818115116103f3578183600052602060002091820191016103f291906103d4565b808211156103ee57600081815060009055506001016103d4565b5090565b5b5050509190906000526020600020900160005b859091909150555060019050610417565b92915050565b60006000600102600019166001600050600084600019168152602001908152602001600020600050600060028110156100025790900160005b50546000191614159050610465565b91905056'
+      },
       'AkashaLib': {
         'interface': [
           {
