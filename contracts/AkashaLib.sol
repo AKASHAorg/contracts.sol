@@ -12,6 +12,10 @@ contract AkashaLib {
          return first.toSliceB32().concat(second.toSliceB32());
     }
 
+    function bytes32ToString(bytes32 chunk) constant returns(string){
+        return chunk.toSliceB32().toString();
+    }
+
     function destroy(){
         if(msg.sender != _creator){ throw;}
         suicide(_creator);

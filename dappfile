@@ -11,4 +11,13 @@ environments:
     objects:
       registry:
         class: AkashaRegistry
-        address: '0x746c7649d41f604ebfbedd32e20ce01c0d2d5eae'
+        address: '0xc71e044e03dd9d61802b8d43b8caaaf10b979d1a'
+      helper:
+        class: AkashaLib
+        address: '0x487f64218c4e1aab06d92cb2672e254522f99705'
+      tags:
+        class: AkashaTags
+        address: '0x97e5088bec074a91404555dd3636d7be2d2b2ddd'
+      indexedTags:
+        class: IndexedTags
+        address: '0xb86770e8a17fb6da8a6a6ed8333faba77d53a86d'

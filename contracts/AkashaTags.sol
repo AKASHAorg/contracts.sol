@@ -2,9 +2,11 @@ contract AkashaTags {
     address _creator;
     mapping(bytes32 => uint) _tag;
     bytes32[] _knownTags;
-    uint _length = 1;
+    uint public _length = 1;
 
-    function AkashaTags(){
+    event TagCreated(bytes32 indexed tag);
+
+    function AkashaTags(address libAddress){
         _creator = msg.sender;
     }
 
@@ -14,10 +16,16 @@ contract AkashaTags {
 
     function add(bytes32 tag) returns(uint){
         if(exists(tag)){ throw;}
-        _knownTags[_length] = tag;
+        _knownTags.push(tag);
         _tag[tag] = _length;
         _length++;
+
+        TagCreated(tag);
         return _tag[tag];
+    }
+
+    function getTagAt(uint position) constant returns(bytes32){
+        return _knownTags[position];
     }
 
     function getTagId(bytes32 tag) constant returns(uint){
