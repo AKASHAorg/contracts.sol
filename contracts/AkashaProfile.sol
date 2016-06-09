@@ -6,6 +6,8 @@ contract AkashaProfile {
     string _fullName;
 
     bytes32[2] _hash;
+    address[] following;
+
     AkashaRegistry registrar;
 
     event UpdateInfo();
