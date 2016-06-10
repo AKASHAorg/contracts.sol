@@ -30,7 +30,7 @@ contract AkashaBadges{
     }
 
     function destroy() onlyCreator{
-        suicide(_creator);
+        selfdestruct(_creator);
     }
 
     function(){throw;}

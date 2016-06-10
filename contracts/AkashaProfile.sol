@@ -52,7 +52,7 @@ contract AkashaProfile {
     function removeProfile() onlyOwner{
         var unlist = registrar.unregister();
         if(unlist){
-           suicide(_owner);
+           selfdestruct(_owner);
         }
     }
 

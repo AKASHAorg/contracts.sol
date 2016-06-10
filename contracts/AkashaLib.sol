@@ -18,7 +18,7 @@ contract AkashaLib {
 
     function destroy(){
         if(msg.sender != _creator){ throw;}
-        suicide(_creator);
+        selfdestruct(_creator);
     }
 
     function(){ throw;}

@@ -1,6 +1,7 @@
 import 'AkashaProfile.sol';
+import "ErrorReporter.sol";
 
-contract AkashaRegistry {
+contract AkashaRegistry is ErrorReporter{
     address public _creator;
     // id => contract addr
     mapping(bytes32=>address) _profile;
@@ -14,11 +15,15 @@ contract AkashaRegistry {
     }
 
     // register new Profile
-    function register(bytes32 name, bytes32[2] ipfsChunks) {
-        if(hasProfile(name)){ throw;}
+    function register(bytes32 name, bytes32[2] ipfsChunks) returns(bool){
+        if(hasProfile(name)){
+            Error(bytes32('Registry:register'), bytes32('hasProfile'));
+            return false;
+        }
         _profile[name] = new AkashaProfile(msg.sender, address(this), ipfsChunks);
         _link[sha3(msg.sender)] = name;
         Register(name, _profile[name]);
+        return true;
     }
 
     // remove msg.sender Profile from Registrar
@@ -55,7 +60,7 @@ contract AkashaRegistry {
         if(msg.sender != _creator){
             throw;
         }
-        suicide(_creator);
+        selfdestruct(_creator);
     }
 
      function(){throw;}

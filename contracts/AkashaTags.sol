@@ -1,4 +1,6 @@
-contract AkashaTags {
+import "ErrorReporter.sol";
+
+contract AkashaTags is ErrorReporter{
     address _creator;
     mapping(bytes32 => uint) _tag;
     bytes32[] _knownTags;
@@ -15,7 +17,10 @@ contract AkashaTags {
     }
 
     function add(bytes32 tag) returns(uint){
-        if(exists(tag)){ throw;}
+        if(exists(tag)){
+            Error(bytes32('Tag:add'), bytes32('exists'));
+            return 0;
+        }
         _knownTags.push(tag);
         _tag[tag] = _length;
         _length++;
@@ -33,7 +38,7 @@ contract AkashaTags {
     }
 
     function destroy(){
-        if(msg.sender == _creator){ suicide(_creator);}
+        if(msg.sender == _creator){ selfdestruct(_creator);}
     }
     function(){throw;}
 }

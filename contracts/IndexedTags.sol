@@ -1,10 +1,15 @@
 import "AkashaTags.sol";
 import "AkashaRegistry.sol";
+import "ErrorReporter.sol";
+import "AkashaMain.sol";
 
-contract IndexedTags {
+contract IndexedTags is ErrorReporter {
     address _creator;
+    address _akashaMain;
+
     AkashaTags _tags;
     AkashaRegistry _registry;
+
     struct TagMeta {
      address[] entries;
      uint totalSubs;
@@ -20,28 +25,46 @@ contract IndexedTags {
        _registry = AkashaRegistry(registry);
     }
 
-    function indexEntry(bytes32[] tag){
+    function setMain(address mainAddress){
+        if(msg.sender!=_creator){ throw;}
+        _akashaMain = mainAddress;
+    }
+
+    function indexEntry(bytes32[] tag) returns(bool){
+        if(msg.sender!=_akashaMain){ throw;}
         for(uint i = 0; i < tag.length; i++) {
-            if(!_tags.exists(tag[i])){ throw;}
+            if(!_tags.exists(tag[i])){
+                Error(bytes32('Tag:index'), bytes32('indexEntry'));
+                return false;
+            }
             cursor[_tags.getTagId(tag[i])].entries.push(msg.sender);
             IndexedTag(_tags.getTagId(tag[i]), msg.sender);
         }
+        return true;
     }
 
-    function subscribe(bytes32 tag){
+    function subscribe(bytes32 tag) returns(bool){
         var tagId = _tags.getTagId(tag);
         var profile = _registry.getByAddr(msg.sender);
-        if(profile==address(0x0) || !_tags.exists(tag) || isSubscribed(profile, tagId)){ throw;}
+        if(profile==address(0x0) || !_tags.exists(tag) || isSubscribed(profile, tagId)){
+            Error(bytes32('Tag:subscribe'), bytes32('isSubscribed'));
+            return false;
+        }
         subscriptions[profile].push(tagId);
         cursor[tagId].totalSubs++;
+        return true;
     }
 
-    function unsubscribe(bytes32 tag){
+    function unsubscribe(bytes32 tag) returns(bool){
         var tagId = _tags.getTagId(tag);
         var profile = _registry.getByAddr(msg.sender);
-        if(!_tags.exists(tag) || !isSubscribed(profile, tagId)){ throw;}
+        if(!_tags.exists(tag) || !isSubscribed(profile, tagId)){
+            Error(bytes32('Tag:unsubscribe'), bytes32('notSubscribed'));
+            return false;
+        }
         delete subscriptions[profile][getSubPosition(profile, tagId)];
         cursor[tagId].totalSubs--;
+        return true;
     }
 
     function isSubscribed(address subscriber, uint tagId) constant returns(bool){
@@ -62,7 +85,7 @@ contract IndexedTags {
     }
 
     function destroy(){
-        if(msg.sender == _creator){ suicide(_creator);}
+        if(msg.sender == _creator){ selfdestruct(_creator);}
     }
 
     function(){throw;}

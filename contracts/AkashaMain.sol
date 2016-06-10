@@ -1,34 +1,49 @@
+import 'AkashaRegistry.sol';
 import 'IndexedTags.sol';
 
-contract AkashaMain {
-    address _creator;
-    bytes32[2] _hash;
+contract AkashaMain is Registered{
 
-    modifier onlyCreator{
-      if(msg.sender!=_creator){ throw; }
+    AkashaRegistry _registry;
+    IndexedTags _indexTags;
+    address _creator;
+
+    struct Comment {
+       address _owner;
+       uint date;
+       bytes32[2] hash;
+       mapping(address => int8) _vote;
+       address[] _votes;
+    }
+
+    modifier onlyRegistered(){
+      if(_registry.getByAddr(msg.sender)==address(0x0)){
+          throw;
+       }
       _
     }
 
+    modifier onlyCreator{
+       if(msg.sender!=_creator){ throw; }
+       _
+    }
+
     struct Entry {
-        address _owner;
-        bytes32[2] _hash;
-
         // sum(weights)*((x^2)/2 +1)
-        mapping(address => int8) _vote;
-        address[] votes;
-    }
-
-    struct Comment {
         address _owner;
-        bytes32[2] _hash;
+        uint date;
+        bytes32[2] hash;
+        uint totalValue;
         mapping(address => int8) _vote;
-        address[] votes;
+        address[] _votes;
+        Comment[] _comments;
     }
 
-    function AkashaEntry(bytes32[2] hash, bytes32[] tags) {
+    mapping(address => Entry) _entry;
+
+    function AkashaMain(address registryAddress, address indexAddress){
+        _registry = AkashaRegistry(registryAddress);
+        _indexTags = IndexedTags(indexAddress);
         _creator = msg.sender;
-        _hash = hash;
-        IndexedTags(0x3d1358cf4d024120ae19002822228344c61e394f).indexEntry(tags);
     }
 
 
