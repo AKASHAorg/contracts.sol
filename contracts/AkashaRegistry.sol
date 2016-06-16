@@ -1,18 +1,13 @@
 import 'AkashaProfile.sol';
-import "ErrorReporter.sol";
+import "AkashaBase.sol";
 
-contract AkashaRegistry is ErrorReporter{
-    address public _creator;
+contract AkashaRegistry is AkashaBase{
+
     // id => contract addr
     mapping(bytes32=>address) _profile;
     // sha3(msg.sender) => id
     mapping(bytes32=>bytes32) _link;
     event Register(bytes32 indexed id, address contr);
-
-    // set creator when deployed
-    function AkashaRegistry() {
-        _creator = msg.sender;
-    }
 
     // register new Profile
     function register(bytes32 name, bytes32[2] ipfsChunks) returns(bool){
@@ -54,13 +49,6 @@ contract AkashaRegistry is ErrorReporter{
 
     function getMyProfile() constant returns(address){
         return getByAddr(msg.sender);
-    }
-
-    function destroy(){
-        if(msg.sender != _creator){
-            throw;
-        }
-        selfdestruct(_creator);
     }
 
      function(){throw;}

@@ -1,11 +1,11 @@
 import 'AkashaRegistry.sol';
 import 'IndexedTags.sol';
+import 'AkashaBase.sol';
 
-contract AkashaMain is Registered{
+contract AkashaMain is AkashaBase{
 
     AkashaRegistry _registry;
     IndexedTags _indexTags;
-    address _creator;
 
     struct Comment {
        address _owner;
@@ -20,11 +20,6 @@ contract AkashaMain is Registered{
           throw;
        }
       _
-    }
-
-    modifier onlyCreator{
-       if(msg.sender!=_creator){ throw; }
-       _
     }
 
     struct Entry {
@@ -43,7 +38,7 @@ contract AkashaMain is Registered{
     function AkashaMain(address registryAddress, address indexAddress){
         _registry = AkashaRegistry(registryAddress);
         _indexTags = IndexedTags(indexAddress);
-        _creator = msg.sender;
+        _owner = msg.sender;
     }
 
 

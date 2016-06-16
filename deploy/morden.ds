@@ -1,6 +1,6 @@
 var registry = new AkashaRegistry()
 var helper = new AkashaLib()
-var tags = new AkashaTags(helper)
+var tags = new AkashaTags()
 var indexedTags = new IndexedTags(tags, registry)
 var badges = new AkashaBadges()
 export registry

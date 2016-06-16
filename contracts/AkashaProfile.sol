@@ -1,21 +1,13 @@
+import 'AkashaBase.sol';
 import 'AkashaRegistry.sol';
 
-contract AkashaProfile {
-    address _owner;
+contract AkashaProfile is AkashaBase{
     address _ethAddress;
-    string _fullName;
-
     bytes32[2] _hash;
-    address[] following;
 
     AkashaRegistry registrar;
 
     event UpdateInfo();
-
-    modifier onlyOwner{
-        if(msg.sender!=_owner){ throw; }
-        _
-    }
 
     // Set contract owner and Registrar contract from address
     function AkashaProfile(address owner, address registrar, bytes32[2] chunks){
@@ -33,7 +25,7 @@ contract AkashaProfile {
     }
 
     // Set address for receiving tipping
-    function setEthAddress(address newAddr) onlyOwner{
+    function setEthAddress(address newAddr) auth(){
         _ethAddress = newAddr;
     }
 
@@ -43,13 +35,13 @@ contract AkashaProfile {
     }
 
     // Set ipfs hash for profile
-    function setHash(bytes32[2] chunks) onlyOwner{
+    function setHash(bytes32[2] chunks) auth(){
         _hash = chunks;
         UpdateInfo();
     }
 
     // Unlist from registrar and suicide contract
-    function removeProfile() onlyOwner{
+    function destroy() auth(){
         var unlist = registrar.unregister();
         if(unlist){
            selfdestruct(_owner);

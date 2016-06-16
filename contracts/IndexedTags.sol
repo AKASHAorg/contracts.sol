@@ -1,10 +1,9 @@
 import "AkashaTags.sol";
 import "AkashaRegistry.sol";
-import "ErrorReporter.sol";
 import "AkashaMain.sol";
+import "AkashaBase.sol";
 
-contract IndexedTags is ErrorReporter {
-    address _creator;
+contract IndexedTags is AkashaBase {
     address _akashaMain;
 
     AkashaTags _tags;
@@ -20,13 +19,12 @@ contract IndexedTags is ErrorReporter {
     event IndexedTag(uint tag, address entry);
 
     function IndexedTags(address tags, address registry){
-       _creator = msg.sender;
+       _owner = msg.sender;
        _tags = AkashaTags(tags);
        _registry = AkashaRegistry(registry);
     }
 
-    function setMain(address mainAddress){
-        if(msg.sender!=_creator){ throw;}
+    function setMain(address mainAddress) auth(){
         _akashaMain = mainAddress;
     }
 
@@ -55,10 +53,14 @@ contract IndexedTags is ErrorReporter {
         return true;
     }
 
-    function unsubscribe(bytes32 tag) returns(bool){
+    function unsubscribe(bytes32 tag, uint subPosition) returns(bool){
         var tagId = _tags.getTagId(tag);
         var profile = _registry.getByAddr(msg.sender);
-        if(!_tags.exists(tag) || !isSubscribed(profile, tagId)){
+        if(!_tags.exists(tag)){
+            Error(bytes32('Tag:unsubscribe'), bytes32('tag!Exist'));
+            return false;
+        }
+        if(subscriptions[profile][subPosition]!= tagId) {
             Error(bytes32('Tag:unsubscribe'), bytes32('notSubscribed'));
             return false;
         }
@@ -76,16 +78,12 @@ contract IndexedTags is ErrorReporter {
          return false;
     }
 
-    function getSubPosition(address subscriber, uint tagId) internal returns(uint){
+    function getSubPosition(address subscriber, uint tagId) constant returns(uint){
         for(uint i=0; i< subscriptions[subscriber].length; i++){
             if(subscriptions[subscriber][i] == tagId){
                 return i;
             }
          }
-    }
-
-    function destroy(){
-        if(msg.sender == _creator){ selfdestruct(_creator);}
     }
 
     function(){throw;}

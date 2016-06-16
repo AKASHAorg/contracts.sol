@@ -9,13 +9,11 @@ contract AkashaRegistryTest is Test {
         proxy_tester = new Tester();
         proxy_tester._target(reg);
     }
-    function testCreatorIsCreator() {
-        assertEq( address(this), reg._creator() );
-    }
     event Register(bytes32 indexed key,address contr);
+    event Error(bytes32 indexed method, bytes32 reason);
+
     function testRegister() logs_gas {
         Register("John_Doe", address(0x0));
-
         assertFalse(reg.hasProfile("John_Doe"));
         AkashaRegistry(proxy_tester).register("John_Doe", [bytes32("QmVtoCDn6SPn6vqUZnhZjTU"),
         bytes32("1B1pbzLAbyTu2EukJMrRGPZ")]);
@@ -29,5 +27,16 @@ contract AkashaRegistryTest is Test {
         assertEq(AkashaRegistry(proxy_tester).getMyProfile(), reg.getById("John_Doe"));
         assertFalse(reg.unregister());
         assertTrue(AkashaRegistry(proxy_tester).unregister());
+    }
+
+    function testEvents(){
+        expectEventsExact(reg);
+        assertTrue(reg.register("John_Doe1", [bytes32("QmVtoCDn6SPn6vqUZnhZjTU"),
+        bytes32("1B1pbzLAbyTu2EukJMrRGPZ")]));
+        Register("John_Doe1", reg.getById("John_Doe1"));
+
+        assertFalse(reg.register("John_Doe1", [bytes32("QmVtoCDn6SPn6vqUZnhZjTU"),
+        bytes32("1B1pbzLAbyTu2EukJMrRGPZ")]));
+        Error(bytes32('Registry:register'), bytes32('hasProfile'));
     }
 }

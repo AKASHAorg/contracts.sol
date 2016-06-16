@@ -1,16 +1,11 @@
-import "ErrorReporter.sol";
+import "AkashaBase.sol";
 
-contract AkashaTags is ErrorReporter{
-    address _creator;
+contract AkashaTags is AkashaBase{
     mapping(bytes32 => uint) _tag;
     bytes32[] _knownTags;
     uint public _length = 1;
 
     event TagCreated(bytes32 indexed tag);
-
-    function AkashaTags(address libAddress){
-        _creator = msg.sender;
-    }
 
     function exists(bytes32 tag) constant returns(bool){
         return _tag[tag]!=0;
@@ -37,8 +32,5 @@ contract AkashaTags is ErrorReporter{
         return _tag[tag];
     }
 
-    function destroy(){
-        if(msg.sender == _creator){ selfdestruct(_creator);}
-    }
     function(){throw;}
 }
