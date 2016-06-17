@@ -44,12 +44,12 @@ contract AkashaRegistry is AkashaBase{
     }
 
     function getByAddr(address addr) constant returns(address) {
-            return _profile[_link[sha3(addr)]];
+        return _profile[_link[sha3(addr)]];
     }
 
     function getMyProfile() constant returns(address){
         return getByAddr(msg.sender);
     }
 
-     function(){throw;}
+    function(){throw;}
 }

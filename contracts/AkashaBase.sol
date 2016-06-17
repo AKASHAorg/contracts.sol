@@ -9,14 +9,14 @@ contract AkashaBase {
     }
 
     modifier auth {
-       if (_owner != msg.sender) {
+        if (_owner != msg.sender) {
             throw;
         }
-       _
+        _
     }
 
     function destroy() auth() {
-       selfdestruct(_owner);
+        selfdestruct(_owner);
     }
 
 }

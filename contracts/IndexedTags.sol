@@ -10,8 +10,8 @@ contract IndexedTags is AkashaBase {
     AkashaRegistry _registry;
 
     struct TagMeta {
-     address[] entries;
-     uint totalSubs;
+        address[] entries;
+        uint totalSubs;
     }
     mapping(uint => TagMeta) public cursor;
     mapping(address => uint[]) subscriptions;
@@ -19,13 +19,15 @@ contract IndexedTags is AkashaBase {
     event IndexedTag(uint tag, address entry);
 
     function IndexedTags(address tags, address registry){
-       _owner = msg.sender;
-       _tags = AkashaTags(tags);
-       _registry = AkashaRegistry(registry);
+        _owner = msg.sender;
+        _tags = AkashaTags(tags);
+        _registry = AkashaRegistry(registry);
     }
 
     function setMain(address mainAddress) auth(){
-        _akashaMain = mainAddress;
+        if(_akashaMain!=address(0x0)){
+            _akashaMain = mainAddress;
+        }
     }
 
     function indexEntry(bytes32[] tag) returns(bool){
@@ -64,7 +66,7 @@ contract IndexedTags is AkashaBase {
             Error(bytes32('Tag:unsubscribe'), bytes32('notSubscribed'));
             return false;
         }
-        delete subscriptions[profile][getSubPosition(profile, tagId)];
+        delete subscriptions[profile][subPosition];
         cursor[tagId].totalSubs--;
         return true;
     }
@@ -74,8 +76,8 @@ contract IndexedTags is AkashaBase {
             if(subscriptions[subscriber][i] == tagId){
                 return true;
             }
-         }
-         return false;
+        }
+        return false;
     }
 
     function getSubPosition(address subscriber, uint tagId) constant returns(uint){
@@ -83,7 +85,7 @@ contract IndexedTags is AkashaBase {
             if(subscriptions[subscriber][i] == tagId){
                 return i;
             }
-         }
+        }
     }
 
     function(){throw;}
