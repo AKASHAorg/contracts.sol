@@ -4,18 +4,14 @@ import 'AkashaProfile.sol';
 
 contract AkashaEntry is AkashaBase {
 
-    uint totalValue;
-    bytes32[2] _hash;
     address _manager;
-
-    function AkashaEntry(bytes32[2] hash, address manager, address owner) {
-        _owner = owner;
-        _hash = hash;
+    function AkashaEntry(address manager, address owner) {
         _manager = manager;
+        _owner = owner;
     }
 
     function withDraw() auth() returns(bool){
-        if(AkashaMain(_manager).canWithDraw()){
+        if(!AkashaMain(_manager).canWithDraw()){
             Error(bytes32('withDraw'), bytes32('notEligible'));
             return false;
         }
