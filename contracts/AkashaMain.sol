@@ -4,7 +4,6 @@ import 'AkashaBase.sol';
 import 'AkashaEntry.sol';
 
 contract AkashaMain is AkashaBase{
-
     AkashaRegistry _registry;
     IndexedTags _indexTags;
 
@@ -36,6 +35,7 @@ contract AkashaMain is AkashaBase{
     struct MediaComponent {
         uint _date;
         bytes32[2] _hash;
+        address _owner;
     }
 
     struct Votes {
@@ -45,24 +45,24 @@ contract AkashaMain is AkashaBase{
         mapping(address => int8) _vote;
     }
 
-    struct Comment {
-        address _owner;
-        MediaComponent _data;
-    }
-
     // Entry address => Entry
     mapping(address => MediaComponent) _entry;
     mapping(address => Votes) _entryVotes;
-    mapping(address => Comment[]) _entryComments;
+    mapping(address => MediaComponent[]) _entryComments;
 
     uint constant voteCost = 1 finney;
+    address _faucetAddress;
+    address _fundsAddress;
 
     // Profile address => Entry address[]
     mapping(address => address[]) _entriesOfAddress;
 
-    function AkashaMain(address registryAddress, address indexAddress){
+    function AkashaMain(address registryAddress, address indexAddress, address faucetAddress,
+    address fundsAddress){
         _registry = AkashaRegistry(registryAddress);
         _indexTags = IndexedTags(indexAddress);
+        _faucetAddress = faucetAddress;
+        _fundsAddress = fundsAddress;
         _owner = msg.sender;
     }
 
@@ -70,7 +70,7 @@ contract AkashaMain is AkashaBase{
         var profile = _registry.getByAddr(msg.sender);
         var newEntry = new AkashaEntry(address(this), profile);
         if(newEntry!=address(0x0)){
-           _entry[newEntry] = MediaComponent({_date: now, _hash: hash});
+           _entry[newEntry] = MediaComponent({_date: now, _hash: hash, _owner: profile});
            _entriesOfAddress[profile].push(newEntry);
            Published(profile, newEntry);
         }else{
@@ -88,18 +88,22 @@ contract AkashaMain is AkashaBase{
             _entryVotes[entryAddress]._votesCount = _entryVotes[entryAddress]._votesCount + 1;
             Voted(profile, entryAddress, uint(weight));
         }else{
-        throw;
+            throw;
         }
     }
 
     function downVote(address entryAddress, int8 weight) onlyRegistered() checkVoteCost(weight){
         var profile = _registry.getByAddr(msg.sender);
         if(_entryVotes[entryAddress]._vote[profile]!=0){ throw;}
-        _entryVotes[entryAddress]._votes.push(profile);
-        _entryVotes[entryAddress]._vote[profile] = -weight;
-        _entryVotes[entryAddress]._votesSum = _entryVotes[entryAddress]._votesSum + uint(-weight);
-        _entryVotes[entryAddress]._votesCount = _entryVotes[entryAddress]._votesCount + 1;
-        Voted(profile, entryAddress, uint(-weight));
+        if(_faucetAddress.send(msg.value)){
+            _entryVotes[entryAddress]._votes.push(profile);
+            _entryVotes[entryAddress]._vote[profile] = -weight;
+            _entryVotes[entryAddress]._votesSum = _entryVotes[entryAddress]._votesSum + uint(-weight);
+            _entryVotes[entryAddress]._votesCount = _entryVotes[entryAddress]._votesCount + 1;
+            Voted(profile, entryAddress, uint(-weight));
+        }else{
+            throw;
+        }
     }
 
     function getVoteOf(address profile, address entryAddress) constant returns(int8){
@@ -110,7 +114,6 @@ contract AkashaMain is AkashaBase{
         if(now > voteEndDate(entryAddress)){ return false;}
         return true;
     }
-
 
     function voteEndDate(address entryAddress) constant returns(uint){
         var endDate = _entry[entryAddress]._date + 6 days;
@@ -125,6 +128,10 @@ contract AkashaMain is AkashaBase{
         var score = _entryVotes[entryAddress]._votesSum * (
         uint(_entryVotes[entryAddress]._votesCount * _entryVotes[entryAddress]._votesCount)/2 + 1);
         return score;
+    }
+
+    function getFundsAddress() constant returns(address){
+        return _fundsAddress;
     }
 
 }
