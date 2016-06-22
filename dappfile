@@ -24,3 +24,6 @@ environments:
       badges:
         class: AkashaBadges
         address: '0xc06a17c6a10c5afc4c496ecbb3bc0946102c195b'
+      akashaMain:
+        class: AkashaMain
+        address: '0xf'

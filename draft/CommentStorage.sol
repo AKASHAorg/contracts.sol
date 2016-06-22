@@ -11,7 +11,7 @@ contract CommentStorage is AkashaStorage{
 
     function updateComment(address poster, address entry, uint commentId) auth() returns(bool){
         if(_entryComments[entry][commentId]._owner!=poster){ return false; }
-
+        _entryComments[entry][commentId]._has
     }
 
     function getCommentsCount(address entry) constant returns(uint){
