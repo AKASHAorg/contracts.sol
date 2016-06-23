@@ -30,15 +30,15 @@ contract IndexedTags is AkashaBase {
         }
     }
 
-    function indexEntry(bytes32[] tag) returns(bool){
+    function indexEntry(address entryAddr, bytes32[] tag) returns(bool){
         if(msg.sender!=_akashaMain){ throw;}
         for(uint i = 0; i < tag.length; i++) {
             if(!_tags.exists(tag[i])){
                 Error(bytes32('Tag:index'), bytes32('indexEntry'));
                 return false;
             }
-            cursor[_tags.getTagId(tag[i])].entries.push(msg.sender);
-            IndexedTag(_tags.getTagId(tag[i]), msg.sender);
+            cursor[_tags.getTagId(tag[i])].entries.push(entryAddr);
+            IndexedTag(_tags.getTagId(tag[i]), entryAddr);
         }
         return true;
     }

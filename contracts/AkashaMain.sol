@@ -97,6 +97,7 @@ contract AkashaMain is AkashaBase{
         if(newEntry!=address(0x0)){
            _entry[newEntry] = MediaComponent({_date: now, _hash: hash, _owner: profile});
            _entriesOfAddress[profile].push(newEntry);
+           IndexedTags(_indexTags).indexEntry(newEntry, tags);
            Published(profile, newEntry);
         }
         else
