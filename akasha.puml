@@ -1,0 +1,136 @@
+@startuml
+
+class AkashaBase{
+    + _owner: address
+    + event Error(method: bytes32, reason: bytes32)
+    + modifier auth()
+    + destroy()
+}
+
+class AkashaProfile{
+    # _ethAddress: address
+    # _hash: bytes32[2]
+    + event UpdateInfo()
+    + setEthAddress(newAddr)
+    + setHash(bytes32[2])
+    + {static} getCollector(): address
+    + {static} getIpfs(): (bytes32, bytes32)
+}
+
+class AkashaRegistry{
+    # _profile: {bytes32=>address}
+    # _link: {bytes32=>bytes32}
+    + event Register(id: bytes32, contr: address)
+    + register(name: bytes32, hash: bytes32[2])
+    + unregister()
+    + {static} hasProfile(name: bytes32): bool
+    + {static} getById(name: bytes32): address
+    + {static} getByAddr(addr: address): address
+    + {static} getMyProfile(): address
+    ~ fallback(): throw
+}
+
+class AkashaTags{
+    # _tag: {bytes32 => uint}
+    # _knownTags: bytes32[]
+    + _length: uint
+    + event TagCreated(tag: bytes32)
+    + add(tag: tag): uint
+    + {static} exists(tag: bytes32): bool
+    + {static} getTagAt(position: uint): bytes32
+    + {static} getTagId(tag: bytes32): uint
+    ~ fallback(): throw
+}
+
+class IndexedTags{
+    + cursor: {uint=>TagMeta}
+    # subscriptions: {address=>uint}
+    + event IndexedTag(tag: uint, entry: address)
+    + indexEntry(entryAddr: address, tags: bytes32[]): bool
+    + subscribe(tag: bytes32): bool
+    + unsubscribe(tag: bytes32, subPosition: uint): bool
+    + {static} isSubscribed(subscriber: address, tagId: uint): bool
+    + {static} getSubPosition(subscriber: address, tagId: uint): uint
+    ~ fallback(): throw
+}
+class TagMeta<<(S,#FF7700) struct>>{
+    - entries: address[]
+    - totalSubs: uint
+}
+class AkashaEntry{
+    # _manager: address
+    + event Receiving(_receiver: address, amount: uint)
+    + withDraw(): bool
+}
+class AkashaFaucet{
+    # _owner: address
+    + withDraw(): bool
+}
+class AkashaFunds{
+    # _owner: address
+    + withDraw(): bool
+}
+
+class AkashaMain{
+    # {static} voteEntryCost: uint
+    # {static} voteCommentCost: uint
+    # _entry: {address=>MediaComponent}
+    # _entryVotes: {address=>Votes}
+    # _entryComments: {address=>MediaComponent[]}
+    # _entryCommentVotes: {address =>{uint=>Votes}}
+    # _entriesOfAddress: {address=>address[]}
+    __ events __
+    + Published(profile: address, entry: address)
+    + Commented(profile: address, entry: address)
+    + Voted(profile: address, entry: address, weight: uint)
+    __modifiers__
+    + onlyRegistered()
+    + onlyEntries()
+    + checkVoting(entryAddress: address)
+    + checkVoteCost(weight: int8, isEntry: bool)
+    __Entry__
+    + publishEntry(hash: bytes32[2], tags: bytes32[])
+    + updateEntry(hash: bytes32[2], entryAddress: address)
+    + upVoteEntry(entryAddress: address, weight: int8)
+    + downVoteEntry(entryAddress: address, weight: int8)
+    + {static} getVoteOf(profile: address, entryAddress: address): int8
+    + {static} openedToVotes(entryAddress: address): bool
+    + {static} voteEndDate(entryAddress: address): uint
+    + {static} getScoreOfEntry(entryAddress: address): uint
+    + {static} getFundsAddress(): address
+    + {static} canWithDraw(): bool
+    __Comment__
+    + saveComment(entry: address, hash: bytes32[2])
+    + updateComment(entry: address, commentId: uint, hash: bytes32[2]): bool
+    + upVoteComment(entryAddress: address, weight: int8, commentId: uint)
+    + downVoteComment(entryAddress: address, weight: int8, commentId: uint)
+    + {static} getCommentsCount(entry: address): uint
+    + {static} getCommentAt(entry: address, commentId: uint): (date, owner, hash)
+    + {static} getScoreOfComment(entryAddress: address, commentId: uint): uint
+}
+
+class MediaComponent<<(S,#FF7700) struct>>{
+    - _date: uint
+    - _hash: bytes32[2]
+    - _owner: address
+}
+
+class Votes<<(S,#FF7700) struct>>{
+    - _votes: address[]
+    - _votesSum: uint
+    - _votesCount: int32
+    - _vote: {address=>int8}
+}
+AkashaBase <|-- AkashaProfile
+AkashaBase <|-- AkashaRegistry
+AkashaProfile --* AkashaRegistry: < deploys
+IndexedTags .. TagMeta
+IndexedTags o-- AkashaTags: > indexes
+AkashaMain .. MediaComponent
+AkashaMain .. Votes
+AkashaMain *-- AkashaEntry: > deploys
+AkashaMain *-- IndexedTags: > stores
+AkashaEntry -- AkashaFunds: > sends to
+AkashaMain -- AkashaFaucet: > sends to
+AkashaProfile -- AkashaMain: > can call
+@enduml
