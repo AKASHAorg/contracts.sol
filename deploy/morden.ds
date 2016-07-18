@@ -6,6 +6,7 @@ var badges = new AkashaBadges()
 var fundsAddress = new AkashaFunds()
 var faucetAddress = new AkashaFaucet()
 var akashaMain = new AkashaMain(registry, indexedTags, faucetAddress, fundsAddress)
+indexedTags.setMain(akashaMain)
 export registry
 export helper
 export tags
