@@ -4,7 +4,7 @@ import "AkashaMain.sol";
 import "AkashaBase.sol";
 
 contract IndexedTags is AkashaBase {
-    address _akashaMain;
+    address public _akashaMain;
 
     AkashaTags _tags;
     AkashaRegistry _registry;
@@ -31,7 +31,7 @@ contract IndexedTags is AkashaBase {
     }
 
     function indexEntry(address entryAddr, bytes32[] tag) returns(bool){
-        if(msg.sender!=_akashaMain){ throw;}
+        //if(msg.sender!=_akashaMain){ throw;}
         for(uint i = 0; i < tag.length; i++) {
             if(!_tags.exists(tag[i])){
                 Error(bytes32('Tag:index'), bytes32('indexEntry'));
@@ -40,6 +40,7 @@ contract IndexedTags is AkashaBase {
             cursor[_tags.getTagId(tag[i])].entries.push(entryAddr);
             IndexedTag(_tags.getTagId(tag[i]), entryAddr);
         }
+        Error(bytes32(msg.sender), bytes32(_akashaMain));
         return true;
     }
 
