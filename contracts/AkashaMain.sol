@@ -64,6 +64,10 @@ contract AkashaMain is AkashaBase{
         mapping(address => int8) _vote;
     }
 
+    // Profile followers
+    mapping(address => address[]) _following;
+    mapping(address => address[]) _followers;
+
     // Entry address => Entry
     mapping(address => MediaComponent) _entry;
     mapping(address => Votes) _entryVotes;
@@ -87,6 +91,42 @@ contract AkashaMain is AkashaBase{
         _fundsAddress = fundsAddress;
         _owner = msg.sender;
     }
+
+    function follow(address profile)
+    onlyRegistered()
+    {
+        var me = _registry.getByAddr(msg.sender);
+        if(_registry.getByAddr(profile)==address(0x0)){
+            throw;
+        }
+        _following[me].push(profile);
+        _followers[profile].push(me);
+    }
+
+    function getFollowingCount(address profile)
+    constant returns(uint)
+    {
+        return _following[profile].length;
+    }
+
+    function getFollowersCount(address profile)
+    constant returns(uint)
+    {
+        return _followers[profile].length;
+    }
+
+    function getFollowingAt(address profile, uint position)
+    constant returns(address)
+    {
+        return _following[profile][position];
+    }
+
+    function getFollowerAt(address profile, uint position)
+    constant returns(address)
+    {
+        return _followers[profile][position];
+    }
+
 
     // =================================== Start Entry AREA ==========================
     function publishEntry(bytes32[2] hash, bytes32[] tags)
@@ -113,6 +153,24 @@ contract AkashaMain is AkashaBase{
         if(_entry[entryAddress]._owner == profile){
             _entry[entryAddress]._hash = hash;
         }
+    }
+
+    function getEntry(address entryAddress)
+    constant returns (uint, address, bytes32[2])
+    {
+        return (_entry[entryAddress]._date, _entry[entryAddress]._owner, _entry[entryAddress]._hash);
+    }
+
+    function getEntriesCount(address profile)
+    constant returns(uint)
+    {
+        return _entriesOfAddress[profile].length;
+    }
+
+    function getEntryOf(address profile, uint position)
+    constant returns (uint, address, bytes32[2])
+    {
+        return getEntry(_entriesOfAddress[profile][position]);
     }
 
     // ===================================== End Entry AREA ==========================
