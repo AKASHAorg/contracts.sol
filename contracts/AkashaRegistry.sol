@@ -5,8 +5,9 @@ contract AkashaRegistry is AkashaBase{
 
     // id => contract addr
     mapping(bytes32=>address) _profile;
+    mapping(address=>bytes32) _ns;
     // sha3(msg.sender) => id
-    mapping(bytes32=>bytes32) _link;
+    mapping(bytes32=>address) _link;
     event Register(bytes32 indexed id, address contr);
 
     // register new Profile
@@ -16,7 +17,8 @@ contract AkashaRegistry is AkashaBase{
             return false;
         }
         _profile[name] = new AkashaProfile(msg.sender, address(this), ipfsChunks);
-        _link[sha3(msg.sender)] = name;
+        _link[sha3(msg.sender)] = _profile[name];
+        _ns[_profile[name]] = name;
         Register(name, _profile[name]);
         return true;
     }
@@ -24,8 +26,9 @@ contract AkashaRegistry is AkashaBase{
     // remove msg.sender Profile from Registrar
     function unregister() external returns(bool){
         var key = sha3(msg.sender);
-        if(hasProfile(_link[key])){
-            delete _profile[_link[key]];
+        if(hasProfile(_ns[_link[key]])){
+            delete _profile[_ns[_link[key]]];
+            delete _ns[_link[key]];
             delete _link[key];
             return true;
         }
@@ -44,7 +47,11 @@ contract AkashaRegistry is AkashaBase{
     }
 
     function getByAddr(address addr) constant returns(address) {
-        return _profile[_link[sha3(addr)]];
+        return _profile[_ns[_link[sha3(addr)]]];
+    }
+
+    function getByContr(address profile) constant returns(bytes32) {
+        return _ns[profile];
     }
 
     function getMyProfile() constant returns(address){

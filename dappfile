@@ -11,19 +11,19 @@ environments:
     objects:
       registry:
         class: AkashaRegistry
-        address: '0x79253996c732ac31f22e9bd449fb7573feeb0cb9'
+        address: '0xcf7ffa7e53a61f1f9d81afee3cf0b3fb813489e3'
       helper:
         class: AkashaLib
-        address: '0x2f7528c23e41c8521affd0b017bd426835ebeae7'
+        address: '0xba8e9199afe0855dbe1349b5abfe9868b7d37f51'
       tags:
         class: AkashaTags
-        address: '0x840d615b05744297cc39069e2bb3849b20ce2ed1'
+        address: '0x4af394a3be0cbf9730400a56abb35d80de16005e'
       indexedTags:
         class: IndexedTags
-        address: '0x468d46111db74ad6a5ac6aec5df04c3e175c2ddd'
+        address: '0x5d9f36f29d9393f028c24eec7645151a3893673c'
       badges:
         class: AkashaBadges
-        address: '0xfd427c82951e85e7bce7270b7ca7f8d1c9074fa8'
+        address: '0x36b2b035809ac5f17423054a3bcb250b2e18633e'
       akashaMain:
         class: AkashaMain
-        address: '0xb402f67f6e5d645204d351e7caf45143134a868e'
+        address: '0xbdc47167babf1c2d483b070c729a63d081ac1e91'
